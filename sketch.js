@@ -1,13 +1,12 @@
 var nn =  new DeepNeuralNetwork();
 
 function setup() {
-    createCanvas(1200, 1000);
+    createCanvas(900, 1000);
     noLoop();
-    var layers = [2,3,3,2]
-    var colors = ["green", "blue", "blue", "red"]
-    nn.quick_draw(x=90, y=30, layers, colors, radius=60, layer_spacing=90, node_spacing=10);
+    var layers = [2,7,6,5,4]
+    // var colors = ["green", "blue", "blue", "red"]
+    nn.quick_draw(x=90, y=30, layers, 0, radius=60, layer_spacing=100, node_spacing=40);
 }
-  
 function draw() {
   
 }
