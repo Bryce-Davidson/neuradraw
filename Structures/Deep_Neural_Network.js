@@ -76,6 +76,10 @@ class DeepNeuralNetworkLayer {
     constructor(size, color) {
         this.size = size;
         this.color = color;
+        this.above = "";
+        this.below = "";
+        this.input = "";
+        this.output = "";
     }
 }
 
