@@ -20,7 +20,7 @@ var input_annotations = {
         }
     ]
 }
-nn.add_layer(2, "green", "input")
+nn.add_layer(2, "green", "input", input_annotations)
 nn.add_layer(3, "blue", "h_1")
 nn.add_layer(2, "red", "output")
 
