@@ -1,6 +1,6 @@
 Layer annotations options
 ```javascript
-{
+var annotation = {
     layer: {
         dotted: true, false
         above: {
