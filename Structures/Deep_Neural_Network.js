@@ -49,7 +49,7 @@ class DeepNeuralNetwork {
 
 
     /**
-    * Draw a neural network from annotations example
+    * Draw a neural network using layers object
     * 
     * @param{Number} x - the x position of the graph (from left)
     * @param{Number} y - the y position of the graph (from top)
@@ -163,12 +163,11 @@ class DeepNeuralNetworkLayer {
     }
 
     /**
-     * @param {Object} annotations
-     */
+    * @param {Object} annotations - the annotations to be provided to the layer
+    */
     add_annotations(annotations) {
         this.annotations = annotations;
     }
-
     // Maybe draws the layer upon calling. 
     // Don't know what i need yet for the layer to be drawn correctly
     draw() {}
