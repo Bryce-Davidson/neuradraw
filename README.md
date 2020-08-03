@@ -1,4 +1,5 @@
 Layer annotations options
+```javascript
 {
     layer: {
         dotted: true, false
@@ -46,3 +47,4 @@ Layer annotations options
         }
     ]
 }
+```
