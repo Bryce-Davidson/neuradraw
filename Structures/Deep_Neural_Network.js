@@ -18,7 +18,7 @@ class DeepNeuralNetwork {
     *           above: {
     *               dimensions: [20, 30], // [width,height]
     *               type: "latex",
-    *               text: "\\int{x^2}=\\frac{x^3}{3}"
+    *               text: "\\int{x^2}dx=\\frac{x^3}{3}"
     *           }
     *       }
     *   })
@@ -41,7 +41,7 @@ class DeepNeuralNetwork {
     *           above: {
     *               dimensions: [20, 40], 
     *               type: "latex",
-    *               text: "\\int{x^2}"
+    *               text: "\\int{x^2}dx"
     *           }
     *       } 
     *   })
@@ -80,25 +80,47 @@ class DeepNeuralNetwork {
 
         // draw the edges for the particular layer before nodes
         this._draw_edges(x, y, sizes, vertical_spacing, horizontal_spacing, diameter);
-
+        // for each layer
         for(var i=0; i < this.layers.length; i++) {
             var layer = this.layers[i];
             let layer_top = vertical_spacing*(layer.size+max(sizes))/2 + y;
-
+            // for each node in the layer
             for(var j=0; j < layer.size; j++) {
                 let center_x = x + 1+diameter/2 + i*horizontal_spacing;
                 let center_y = layer_top - j*vertical_spacing;
                 
-                push();
-                fill(layer.color || "white")
-                stroke(layer.color || "black")
-                circle(center_x, center_y, diameter)
-                pop();
+                // need to add in functionality for drawing the dots in
+                // if there are dots we skip a node and just draw dots
+                // diamater/3 and then add in the spacing
+
+                // if we are on the second last node and dots is true
+                    // draw in three circles of radius/5 then spacing of radius/5 
+                    // 3 dots, with two dots of spacing
+                if(layer.annotations.dotted && j==1) {
+                    push();
+                    fill("black");
+                    stroke("black");
+                    for(var d=0; d<3; d++) {
+                        circle(center_x, center_y - 10+(d*10), diameter/10)
+                    }
+                    pop();
+                } else {
+                    push();
+                    fill(layer.color || "white")
+                    stroke(layer.color || "black")
+                    circle(center_x, center_y, diameter)
+                    pop();
+                }
             }
         }
     }
 
     _draw_layer_annotations(annotation_config) {
+        
+        // draw them of they are there if they aren't then don't
+        // becomes problem of detecting when to draw
+
+        // only need to execute layer on top and bottom
 
     }
 
@@ -176,7 +198,7 @@ class DeepNeuralNetworkLayer {
     constructor(size, color, name, annotations) {
         this.size = size;
         this.color = color;
-        this.annotations = annotations;
+        this.annotations = annotations || {};
     }
 
     /**

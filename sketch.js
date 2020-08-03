@@ -1,6 +1,7 @@
 var nn =  new DeepNeuralNetwork();
 
 var input_annotations = {
+    dotted: true,
     layer: {
         above: {
             dimensions: [40,40],
@@ -20,8 +21,10 @@ var input_annotations = {
         }
     ]
 }
+
+
 nn.add_layer(2, "green", "input", input_annotations)
-nn.add_layer(3, "blue", "h_1")
+nn.add_layer(3, "blue", "h_1", {dotted: true})
 nn.add_layer(2, "red", "output")
 
 console.log(nn);
