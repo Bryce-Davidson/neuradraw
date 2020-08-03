@@ -1,5 +1,3 @@
-// new p5();
-
 class DeepNeuralNetwork {
     constructor() {
         this.layers = [];
@@ -12,11 +10,23 @@ class DeepNeuralNetwork {
     * @param{Number} size - the size of the layer
     * @param{String} color - the color of the layer 
     * @param{String} name - the name of the layer
+    * @param{Object} annotations - the annotations to be added [see README.md for options and examples]
+    * @example
+    *   nn.add_layer(3, "white", "output", {
+    *       layer: {
+    *           dotted: true,
+    *           above: {
+    *               dimensions: [20, 30], // [width,height]
+    *               type: "latex",
+    *               text: "\\int{x^2}=\\frac{x^3}{3}"
+    *           }
+    *       }
+    *   })
     * @returns nothing
     */
-    add_layer(size, color, name) {
+    add_layer(size, color, name, annotations) {
         // Do i need this here or should i make it so that the layers are added exlipcit
-        let new_layer = new DeepNeuralNetworkLayer(size, color, name);
+        let new_layer = new DeepNeuralNetworkLayer(size, color, name, annotations);
         this.layers.push(new_layer);
     }
 
@@ -62,12 +72,10 @@ class DeepNeuralNetwork {
         let vertical_spacing = radius + node_spacing
         let horizontal_spacing = radius + layer_spacing
 
+        // gather all of the sizes to find max
         var sizes = [];
         for(var i=0; i < this.layers.length; i++)
             sizes.push(this.layers[i].size);
-        
-        // TODO:
-            // Need to implement the randomize weights function
 
         // draw the edges for the particular layer
         this._draw_edges(x, y, sizes, vertical_spacing, horizontal_spacing, radius);
@@ -79,8 +87,6 @@ class DeepNeuralNetwork {
             let layer_top = vertical_spacing*(layer.size+max(sizes))/2 + y;
 
             var annotations = layer.annotations || NaN;
-            // console.log(annotations);
-            // For each node
             for(var j=0; j < layer.size; j++) {
                 let center_x = x + 1+radius/2 + i*horizontal_spacing;
                 let center_y = layer_top - j*vertical_spacing;
@@ -156,10 +162,10 @@ class DeepNeuralNetwork {
 }
 
 class DeepNeuralNetworkLayer {
-    constructor(size, color, name) {
+    constructor(size, color, name, annotations) {
         this.size = size;
         this.color = color;
-        this.annotations = {};
+        this.annotations = annotations;
     }
 
     /**
@@ -168,7 +174,4 @@ class DeepNeuralNetworkLayer {
     add_annotations(annotations) {
         this.annotations = annotations;
     }
-    // Maybe draws the layer upon calling. 
-    // Don't know what i need yet for the layer to be drawn correctly
-    draw() {}
 }

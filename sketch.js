@@ -1,11 +1,28 @@
-// new p5();
 var nn =  new DeepNeuralNetwork();
 
+var input_annotations = {
+    layer: {
+        above: {
+            dimensions: [40,40],
+            type: "latex",
+            text: "\\int{x^2}"
+        },
+        below: {
+            dimensions: [40,40],
+            type: "latex",
+            text: "\\int{x^2}"
+        }
+    },
+    nodes: [
+        {
+            nodes: [-1],
+
+        }
+    ]
+}
 nn.add_layer(2, "green", "input")
 nn.add_layer(3, "blue", "h_1")
 nn.add_layer(2, "red", "output")
-
-console.log(nn);
 
 console.log(nn);
 
