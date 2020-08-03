@@ -13,19 +13,19 @@ var input_annotations = {
             type: "latex",
             text: "\\int{x^2}"
         }
-    },
-    nodes: [
-        {
-            nodes: [-1],
+    }
+    // nodes: [
+    //     {
+    //         nodes: [-1],
 
-        }
-    ]
+    //     }
+    // ]
 }
 
 
-nn.add_layer(2, "green", "input", input_annotations)
-nn.add_layer(3, "blue", "h_1", {dotted: true})
-nn.add_layer(2, "red", "output")
+nn.add_layer(5, "green", "input", input_annotations)
+nn.add_layer(7, "blue", "h_1", {dotted: true})
+nn.add_layer(3, "red", "output")
 
 console.log(nn);
 

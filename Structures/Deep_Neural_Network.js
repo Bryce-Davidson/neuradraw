@@ -78,8 +78,14 @@ class DeepNeuralNetwork {
         for(var i=0; i < this.layers.length; i++)
             sizes.push(this.layers[i].size);
 
-        // draw the edges for the particular layer before nodes
+        
+        //TODO:
+            // need to incorperate some way to 
+            // prevent drawnig edges if the layer has dotted true
+
+
         this._draw_edges(x, y, sizes, vertical_spacing, horizontal_spacing, diameter);
+
         // for each layer
         for(var i=0; i < this.layers.length; i++) {
             var layer = this.layers[i];
@@ -89,13 +95,6 @@ class DeepNeuralNetwork {
                 let center_x = x + 1+diameter/2 + i*horizontal_spacing;
                 let center_y = layer_top - j*vertical_spacing;
                 
-                // need to add in functionality for drawing the dots in
-                // if there are dots we skip a node and just draw dots
-                // diamater/3 and then add in the spacing
-
-                // if we are on the second last node and dots is true
-                    // draw in three circles of radius/5 then spacing of radius/5 
-                    // 3 dots, with two dots of spacing
                 if(layer.annotations.dotted && j==1) {
                     push();
                     fill("black");
