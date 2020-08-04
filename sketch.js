@@ -27,14 +27,13 @@ nn.add_layer(5, "green", "input", input_annotations)
 nn.add_layer(7, "blue", "h_1", {dotted: true})
 nn.add_layer(3, "red", "output")
 
-console.log(nn);
+// console.log(nn);
 
 function setup() {
     createCanvas(2000, 2000);
     noLoop();
-    
     nn.draw(x=90, y=30, radius=60, layer_spacing=100, node_spacing=40)
-
+    console.log(nn);
 
     // var col = color(255,0,244);
     // tex = createP();

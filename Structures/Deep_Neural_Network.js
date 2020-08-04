@@ -1,7 +1,8 @@
 class DeepNeuralNetwork {
     constructor() {
         this.layers = [];
-        this.colors = [];
+        this.coords = {};
+        this.edge_connections = [];
     }
 
     /**
@@ -70,47 +71,33 @@ class DeepNeuralNetwork {
     */
     draw(x, y, diameter, layer_spacing, node_spacing) {
 
-        let vertical_spacing = diameter + node_spacing
-        let horizontal_spacing = diameter + layer_spacing
+        if(Object.keys(this.coords).length == 0 && this.edge_connections.length==0) {
+            const vertical_spacing = diameter + node_spacing
+            const horizontal_spacing = diameter + layer_spacing
+            var sizes = [];
 
-        // gather all of the sizes to find max and for edges
-        var sizes = [];
-        for(var i=0; i < this.layers.length; i++)
-            sizes.push(this.layers[i].size);
+            for(var i=0; i < this.layers.length; i++)
+                sizes.push(this.layers[i].size);
 
-        
-        //TODO:
-            // need to incorperate some way to 
-            // prevent drawnig edges if the layer has dotted true
+            for(var i=0; i < this.layers.length; i++) {
+                this.edge_connections.push([])
 
+                var cur_layer = this.layers[i];
+                this.coords[cur_layer.name] = {}
+                this.coords[cur_layer.name]["coords"] = []
+                const layer_top = vertical_spacing*(cur_layer.size+max(sizes))/2 + y;
 
-        this._draw_edges(x, y, sizes, vertical_spacing, horizontal_spacing, diameter);
+                for(var j=0; j < cur_layer.size; j++) {
+                    let center_x = x + 1+diameter/2 + i*horizontal_spacing;
+                    let center_y = layer_top - j*vertical_spacing;
+                    
+                    this.edge_connections[i].push([center_x, center_y])
+                    
+                    this.coords[cur_layer.name]["coords"].push([center_x, center_y])
 
-        // for each layer
-        for(var i=0; i < this.layers.length; i++) {
-            var layer = this.layers[i];
-            let layer_top = vertical_spacing*(layer.size+max(sizes))/2 + y;
-            // for each node in the layer
-            for(var j=0; j < layer.size; j++) {
-                let center_x = x + 1+diameter/2 + i*horizontal_spacing;
-                let center_y = layer_top - j*vertical_spacing;
-                
-                if(layer.annotations.dotted && j==1) {
-                    push();
-                    fill("black");
-                    stroke("black");
-                    for(var d=0; d<3; d++) {
-                        circle(center_x, center_y - 10+(d*10), diameter/10)
-                    }
-                    pop();
-                } else {
-                    push();
-                    fill(layer.color || "white")
-                    stroke(layer.color || "black")
-                    circle(center_x, center_y, diameter)
-                    pop();
                 }
             }
+            // draw edges
         }
     }
 
@@ -196,6 +183,7 @@ class DeepNeuralNetwork {
 class DeepNeuralNetworkLayer {
     constructor(size, color, name, annotations) {
         this.size = size;
+        this.name = name;
         this.color = color;
         this.annotations = annotations || {};
     }
