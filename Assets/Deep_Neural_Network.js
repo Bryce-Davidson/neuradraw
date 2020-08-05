@@ -1,3 +1,13 @@
+
+// Each asset just a draw config
+// On draw the draw config is stored
+    // The procedural drawing steps will be taken out on these data
+
+// Draw function
+    // Store computations in instance
+// Update function
+    // Update aspects of the draw object stroed in class
+
 class DeepNeuralNetwork {
     constructor() {
         this.layers = [];
@@ -31,34 +41,6 @@ class DeepNeuralNetwork {
     }
 
     /**
-    * Adds an annotation config object to the specified layer
-    * 
-    * @param{Number} layer_index - the index of the layer to recieve annotations
-    * @param{Object} annotations - the annotation config object
-    * @example
-    *   nn.add_annotations(0, {
-    *       layer: {
-    *           above: {
-    *               dimensions: [20, 40], 
-    *               type: "latex",
-    *               text: "\\int{x^2}dx"
-    *           }
-    *       } 
-    *   })
-    * 
-    * @returns nothing
-    */
-    add_annotations(layer_index, annotations) {
-        if(layer_index == undefined)
-            throw new Error("Need to include a layer index to add annotations")
-
-        // console.log(layer_index, annotations);
-        var layer = this.layers[layer_index];
-        layer.add_annotations(annotations);
-    }
-
-
-    /**
     * Draws the deep neural network
     * 
     * @param{Number} x - the x position of the graph (from left)
@@ -74,12 +56,28 @@ class DeepNeuralNetwork {
     // The draw function should just call the render commands sequentially with defualt values
     // We will be able to call the commands one at a time if we need
 
-    draw(x, y, diameter, layer_spacing, node_spacing, randomized=false, random_alpha=false) {
+    draw({
+        x=0, 
+        y=0, 
+        diameter=60, 
+        layer_spacing=120, 
+        node_spacing=60, 
+        randomized=false, 
+        random_alpha=false}) {
+            
         if(Object.keys(this.coords).length == 0)
-            this._compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing)
-        this._draw_edges(randomized, random_alpha);
+            this.compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing)
+    
+        // Desired Controls
+            // Control the colors of edges
+                // Individually - Save matrix of edge data
+                // Randomly (red, blue)
+
+        this.draw_edges(randomized, random_alpha, diameter);
         // draw circles
+        this.draw_nodes(diameter);
         // draw annotations
+        // this.draw_annotations();
     }
 
     /**
@@ -90,7 +88,7 @@ class DeepNeuralNetwork {
     * @param{Number} node_spacing - the spacing between each node in a layer
     * @returns nothing
     */
-    _compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing) {
+    compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing) {
         const vertical_spacing = diameter + node_spacing
         const horizontal_spacing = diameter + layer_spacing
         var sizes = [];
@@ -118,7 +116,7 @@ class DeepNeuralNetwork {
      * @param {Boolean} randomized - whether to randomize edge colors
      * @param {Boolean} random_alpha - whether to randomize edge alphas
      */
-    _draw_edges(randomized, random_alpha) {
+    draw_edges(randomized, random_alpha, diameter) {
         // TODO:
             // Should be able to take in custom colors and an alpha value instead of a random choice each time
                 // if the color is specified to be -1 then the color will be random each time drawn
@@ -142,18 +140,26 @@ class DeepNeuralNetwork {
                     }
                     if(random_alpha)
                         line_color.setAlpha(Math.floor(random(200)));
-                    line(cur_node[0], cur_node[1], next_node[0], next_node[1]);
+                    line(cur_node[0]+diameter/2, cur_node[1], next_node[0]-diameter/2, next_node[1]);
                     pop();
                 }
             }
         }
     }
 
-    _draw_nodes() {
-
+    draw_nodes(diameter) {
+        for(var i=0; i < this.layers.length; i++) {
+            // console.log("here")
+            var cur_layer = this.layers[i];
+            for(var j=0; j < cur_layer.size; j++) {
+                var cur_node = this.coords[cur_layer.name].coords[j];
+                // console.log(cur_node);
+                circle(cur_node[0], cur_node[1], diameter);
+            }
+        }
     }
 
-    _draw_annotations() {
+    draw_annotations() {
 
     }
 }

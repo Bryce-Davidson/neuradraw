@@ -47,7 +47,7 @@ function setup() {
 }
 function draw() {
     clear();
-    nn.draw(x=90, y=30, radius=60, layer_spacing=300, node_spacing=40, randomized=true, random_alpha=true)
+    nn.draw({x:90, y:30, radius:60, layer_spacing:300, node_spacing:40, randomized:true, random_alpha:true})
     // compute points
     // draw edges
     // draw nodes
