@@ -70,14 +70,13 @@ class DeepNeuralNetwork {
     * @param{Boolean} random_alpha - randomize the slpha of the weights
     * @returns nothing
     */
+
+    // The draw function should just call the render commands sequentially with defualt values
+    // We will be able to call the commands one at a time if we need
+
     draw(x, y, diameter, layer_spacing, node_spacing, randomized=false, random_alpha=false) {
         if(Object.keys(this.coords).length == 0)
             this._compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing)
-        
-
-        // somehow I need to connect the draw_edges and the circles to work with the annotations
-
-        // draw edges
         this._draw_edges(randomized, random_alpha);
         // draw circles
         // draw annotations
@@ -120,6 +119,12 @@ class DeepNeuralNetwork {
      * @param {Boolean} random_alpha - whether to randomize edge alphas
      */
     _draw_edges(randomized, random_alpha) {
+        // TODO:
+            // Should be able to take in custom colors and an alpha value instead of a random choice each time
+                // if the color is specified to be -1 then the color will be random each time drawn
+            // Random weights
+            // The config object
+
         var colors = [color(255,0,0), color(0,0,255)];
         for(var i=0; i < this.layers.length - 1; i++) {
             var cur_layer = this.layers[i];
