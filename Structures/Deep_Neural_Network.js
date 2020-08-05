@@ -2,7 +2,6 @@ class DeepNeuralNetwork {
     constructor() {
         this.layers = [];
         this.coords = {};
-        this.edge_connections = [];
     }
 
     /**
@@ -60,8 +59,29 @@ class DeepNeuralNetwork {
 
 
     /**
-    * Draws the edges connecting the nodes of the graph
+    * Draws the deep neural network
     * 
+    * @param{Number} x - the x position of the graph (from left)
+    * @param{Number} y - the y position of the graph (from top)
+    * @param{Number} diameter - the diameter of the nodes in the graph
+    * @param{Number} layer_spacing - the spacing between each layer in the graph
+    * @param{Number} node_spacing - the spacing between each node in a layer
+    * @param{Boolean} randomized - randomize the color of the weights between red and blue
+    * @param{Boolean} random_alpha - randomize the slpha of the weights
+    * @returns nothing
+    */
+    draw(x, y, diameter, layer_spacing, node_spacing, randomized=false, random_alpha=false) {
+        if(Object.keys(this.coords).length == 0)
+            this._compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing)
+        
+        // draw edges
+        this._draw_edges(randomized, random_alpha);
+
+        // draw annotations
+        // draw circles
+    }
+
+    /**
     * @param{Number} x - the x position of the graph (from left)
     * @param{Number} y - the y position of the graph (from top)
     * @param{Number} diameter - the diameter of the nodes in the graph
@@ -69,114 +89,65 @@ class DeepNeuralNetwork {
     * @param{Number} node_spacing - the spacing between each node in a layer
     * @returns nothing
     */
-    draw(x, y, diameter, layer_spacing, node_spacing) {
+    _compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing) {
+        const vertical_spacing = diameter + node_spacing
+        const horizontal_spacing = diameter + layer_spacing
+        var sizes = [];
 
-        if(Object.keys(this.coords).length == 0 && this.edge_connections.length==0) {
-            const vertical_spacing = diameter + node_spacing
-            const horizontal_spacing = diameter + layer_spacing
-            var sizes = [];
+        for(var i=0; i < this.layers.length; i++)
+            sizes.push(this.layers[i].size);
 
-            for(var i=0; i < this.layers.length; i++)
-                sizes.push(this.layers[i].size);
+        for(var i=0; i < this.layers.length; i++) {
+            const cur_layer = this.layers[i];
+            const layer_top = vertical_spacing*(cur_layer.size+max(sizes))/2 + y;
 
-            for(var i=0; i < this.layers.length; i++) {
-                this.edge_connections.push([])
+            this.coords[cur_layer.name] = {}
+            this.coords[cur_layer.name]["coords"] = []
 
-                var cur_layer = this.layers[i];
-                this.coords[cur_layer.name] = {}
-                this.coords[cur_layer.name]["coords"] = []
-                const layer_top = vertical_spacing*(cur_layer.size+max(sizes))/2 + y;
-
-                for(var j=0; j < cur_layer.size; j++) {
-                    let center_x = x + 1+diameter/2 + i*horizontal_spacing;
-                    let center_y = layer_top - j*vertical_spacing;
-                    
-                    this.edge_connections[i].push([center_x, center_y])
-                    
-                    this.coords[cur_layer.name]["coords"].push([center_x, center_y])
-
-                }
-            }
-            // draw edges
-        }
-    }
-
-    _draw_layer_annotations(annotation_config) {
-        
-        // draw them of they are there if they aren't then don't
-        // becomes problem of detecting when to draw
-
-        // only need to execute layer on top and bottom
-
-    }
-
-    /**
-    * Quickly draw a fully connected neural network by only specifying layer sizes and colors.
-    * 
-    * @param{Number} x - the x position of the graph (from left)
-    * @param{Number} y - the y position of the graph (from top)
-    * @param{[Number]} layers - an array containing the layer sizes
-    * @param{[String]} colors - an array containging the the layer colors
-    * @returns nothing
-    */
-    quick_draw(x, y, layers, colors, diameter, layer_spacing, node_spacing) {
-        var vertical_spacing = diameter + node_spacing
-        var horizontal_spacing = diameter + layer_spacing
-
-        this._draw_edges(x, y, layers, vertical_spacing, horizontal_spacing, diameter);
-        
-        for(var i=0; i < layers.length; i++) {
-            var layer_size = layers[i];
-            var layer_top = vertical_spacing*(layer_size+max(layers))/2 + y;
-            for(var j=0; j < layer_size; j++) {
-                if(colors!=0) {
-                    fill(colors[i])
-                }
+            for(var j=0; j < cur_layer.size; j++) {
                 let center_x = x + 1+diameter/2 + i*horizontal_spacing;
                 let center_y = layer_top - j*vertical_spacing;
-                circle(center_x, center_y, diameter)
+                
+                this.coords[cur_layer.name]["coords"].push([center_x, center_y])
             }
         }
     }
 
     /**
-     * 
-     * @param {Number} x - the x offset provided by the draw function
-     * @param {Number} y - the y offset provided by the draw function
-     * @param {[Number]} layers - the layer sizes array provided by the draw function
-     * @param {Number} vertical_spacing - the vertical spacing provided by the draw function
-     * @param {Number} horizontal_spacing - the horizontal spacing provided by the draw function
-     * @param {Number} diameter - the diameter of the nodes provided by the draw function
-     * @returns nothing
+     * @param {Boolean} randomized - whether to randomize edge colors
+     * @param {Boolean} alpha - whether to randomize edge alphas
      */
-    _draw_edges(x, y, layers, vertical_spacing, horizontal_spacing, diameter) {
-        // Gather layers sizes
-        var a = layers.slice(0,-1);
-        var b = layers.slice(1);
-        var c = a.map(function(e, i) {
-            return [e, b[i]];
-        });
-        
-        // For each pair of layers
-        for(var n=0; n < c.length; n++) {
-            var layer_size_a = c[n][0];
-            var layer_size_b = c[n][1];
-        
-            var layer_top_a = vertical_spacing*(layer_size_a+max(layers))/2 + y + vertical_spacing;
-            var layer_top_b = vertical_spacing*(layer_size_b+max(layers))/2 + y + vertical_spacing;
-        
-            // for each node in layer a
-            for(var m=1; m <= layer_size_a; m++) {  
-            let a_center_x = x + 1+diameter/2 + n*horizontal_spacing + diameter/2;
-            let a_center_y = layer_top_a - m*vertical_spacing;
-                // connect to each node in layer b
-                for(var o=1; o <= layer_size_b; o++) {
-                    let b_center_x = x + 1+diameter/2 + (n+1)*horizontal_spacing - diameter/2;
-                    let b_center_y = layer_top_b - o*vertical_spacing;
-                    line(a_center_x, a_center_y, b_center_x,b_center_y)
+    _draw_edges(randomized, random_alpha, random_size) {
+        var colors = [color(255,0,0), color(0,0,255)];
+        // for i-1 layers
+        for(var i=0; i < this.layers.length - 1; i++) {
+            var cur_layer = this.layers[i];
+            var next_layer = this.layers[i+1];
+            for(var j=0; j < cur_layer.size; j++) {
+                var cur_node = this.coords[cur_layer.name].coords[j];
+                for(var k=0; k < next_layer.size; k++) {
+                    var next_node = this.coords[next_layer.name].coords[k];
+
+                    push();
+                    if(randomized) {
+                        var line_color = colors[Math.floor(Math.random() * colors.length)]
+                        stroke(line_color);
+                    }
+                    if(random_alpha)
+                        line_color.setAlpha(Math.floor(random(200)));
+                    line(cur_node[0], cur_node[1], next_node[0], next_node[1]);
+                    pop();
                 }
             }
         }
+    }
+
+    _draw_nodes() {
+
+    }
+
+    _draw_annotations() {
+
     }
 }
 
