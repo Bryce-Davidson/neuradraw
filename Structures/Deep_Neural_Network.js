@@ -74,11 +74,13 @@ class DeepNeuralNetwork {
         if(Object.keys(this.coords).length == 0)
             this._compute_and_store_coordinates_of_nodes(x, y, diameter, layer_spacing, node_spacing)
         
+
+        // somehow I need to connect the draw_edges and the circles to work with the annotations
+
         // draw edges
         this._draw_edges(randomized, random_alpha);
-
-        // draw annotations
         // draw circles
+        // draw annotations
     }
 
     /**
@@ -117,9 +119,8 @@ class DeepNeuralNetwork {
      * @param {Boolean} randomized - whether to randomize edge colors
      * @param {Boolean} alpha - whether to randomize edge alphas
      */
-    _draw_edges(randomized, random_alpha, random_size) {
+    _draw_edges(randomized, random_alpha) {
         var colors = [color(255,0,0), color(0,0,255)];
-        // for i-1 layers
         for(var i=0; i < this.layers.length - 1; i++) {
             var cur_layer = this.layers[i];
             var next_layer = this.layers[i+1];
@@ -129,8 +130,9 @@ class DeepNeuralNetwork {
                     var next_node = this.coords[next_layer.name].coords[k];
 
                     push();
+                    var line_color = color(0,0,0);
                     if(randomized) {
-                        var line_color = colors[Math.floor(Math.random() * colors.length)]
+                        line_color = colors[Math.floor(Math.random() * colors.length)]
                         stroke(line_color);
                     }
                     if(random_alpha)

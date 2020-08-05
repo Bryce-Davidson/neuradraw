@@ -33,7 +33,7 @@ function setup() {
     createCanvas(2000, 2000);
     noLoop();
     nn.draw(x=90, y=30, radius=60, layer_spacing=100, node_spacing=40, randomized=true, random_alpha=true)
-    // console.log(nn);
+    console.log(nn);
 
     // var col = color(255,0,244);
     // tex = createP();
