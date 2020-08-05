@@ -109,7 +109,7 @@ class DeepNeuralNetwork {
             for(var j=0; j < cur_layer.size; j++) {
                 let center_x = x + 1+diameter/2 + i*horizontal_spacing;
                 let center_y = layer_top - j*vertical_spacing;
-                
+
                 this.coords[cur_layer.name]["coords"].push([center_x, center_y])
             }
         }
@@ -117,7 +117,7 @@ class DeepNeuralNetwork {
 
     /**
      * @param {Boolean} randomized - whether to randomize edge colors
-     * @param {Boolean} alpha - whether to randomize edge alphas
+     * @param {Boolean} random_alpha - whether to randomize edge alphas
      */
     _draw_edges(randomized, random_alpha) {
         var colors = [color(255,0,0), color(0,0,255)];
