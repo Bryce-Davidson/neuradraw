@@ -140,6 +140,7 @@ class DeepNeuralNetwork {
                     }
                     if(random_alpha)
                         line_color.setAlpha(Math.floor(random(200)));
+                    strokeWeight(1.2);
                     line(cur_node[0]+diameter/2, cur_node[1], next_node[0]-diameter/2, next_node[1]);
                     pop();
                 }
