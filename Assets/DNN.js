@@ -25,21 +25,29 @@ class DNN {
             this.__compile_edge_coordinates();
         }
         if(updated_configurations.includes("weight_colors"))
-            this.__compile_edge_colors();
+        this.__compile_edge_colors();
         if(updated_configurations.includes("weight_thicknesses"))
-            this.__compile_edge_thicknesses();
-        this.drawing_config = config;
+        this.__compile_edge_thicknesses();
+        console.log("before:", this.drawing_config)
+        this.drawing_config = {
+            ...this.drawing_config,
+            ...updated_config
+        }
+        console.log("after", this.drawing_config)
     }
 
     draw({
         x=0, 
         y=0, 
         diameter=60,
-        layer_spacing=120,
+        layer_spacing=200,
         node_spacing=60,
         weight_colors=0,
         weight_thicknesses=0.3,
-        weight_alphas=1}) {
+        weight_alphas=1}={}) {
+
+        if(!arguments[0])
+            throw new Error("Please provide a drawing configuration object.")
 
         if(!this.drawing_config) {
             this.drawing_config = {x,y,diameter,layer_spacing,node_spacing,weight_colors,weight_thicknesses,weight_alphas};
@@ -105,8 +113,10 @@ class DNN {
         }
     }
 
+    // I need a non invasive compilation here
     __compile_edge_coordinates() {
         this.state.edges = []
+        // this is why we are reseting the edges each time we compile
         for(var i=0; i < this.state.layer_configs.length - 1; i++) {
             var cur_layer = this.state.layer_configs[i];
             var next_layer = this.state.layer_configs[i+1];
@@ -114,7 +124,11 @@ class DNN {
                 var cur_node = this.state[cur_layer.name].node_coords[j];
                 for(var k=0; k < next_layer.size; k++) {
                     var next_node = this.state[next_layer.name].node_coords[k];
-                    this.state.edges.push([...cur_node, ...next_node])
+                    this.state.edges.push([
+                        cur_node[0]+this.drawing_config.diameter/2, 
+                        cur_node[1], 
+                        next_node[0]-this.drawing_config.diameter/2, 
+                        next_node[1]])
                 }
             }
         }
@@ -123,7 +137,7 @@ class DNN {
     __compile_edge_colors() {
         const { weight_colors } = this.drawing_config;
         for(var i=0; i < this.state.edges.length; i++) {
-            let color = weight_colors[i] || "black";
+            let color = weight_colors[i] || weight_colors || "black";
             this.state.edges[i].push(color)
         }
     }
@@ -132,17 +146,23 @@ class DNN {
         const { weight_thicknesses } = this.drawing_config;
         for(var i=0; i < this.state.edges.length; i++) {
             const DEFAULT_EDGE_THICKNESS = 1.2;
-            let color = weight_thicknesses[i] || DEFAULT_EDGE_THICKNESS;
+            let color = weight_thicknesses[i] || weight_thicknesses || DEFAULT_EDGE_THICKNESS;
             this.state.edges[i].push(color)
         }
+    }
+
+    __compile_layer_annotations() {
+
     }
 
     _draw_edges() {
         for(var i=0; i < this.state.edges.length; i++) {
             let e = this.state.edges[i];
+            push();
             stroke(e[4]);
             strokeWeight(e[5]);
             line(e[0], e[1], e[2], e[3])
+            pop();
         }
     }
 
@@ -151,40 +171,48 @@ class DNN {
             var cur_layer = this.state.layer_configs[i];
             for(var j=0; j < cur_layer.size; j++) {
                 var cur_node = this.state[cur_layer.name].node_coords[j];
-                console.log(cur_node)
+                push()
+                fill(cur_layer.color)
                 circle(cur_node[0], cur_node[1], this.drawing_config.diameter);
+                pop();
             }
         }
     }
+
     _draw_annotations() {
 
     }
 
+    get num_edges() {
+        var edges = 0;
+        for(var i=0; i < this.state.layer_configs.length-1; i++) {
+            var cur_layer = this.state.layer_configs[i];
+            var next_layer = this.state.layer_configs[i+1];
+            edges += cur_layer.size * next_layer.size;
+        }
+        return edges;
+    }
+
+    // the update checker isn't complex enough because it isn't doing a deep comparison
+    // for the array paramaters
+
     get_updated_configurations(updated_config) {
         var updated_config_paramaters = [];
-        for(var key in Object.keys(config)) {
-            if(this.drawing_config[key] != updated_config[key])
-                updated_configurations.append(key);
+        const keys = Object.keys(this.drawing_config);
+        for(var i=0; i< keys.length; i++) {
+            if(updated_config[keys[i]] && this.drawing_config[keys[i]] != updated_config[keys[i]])
+                updated_config_paramaters.push(keys[i]);
         }
         return updated_config_paramaters;
     }
 
     has_updates(new_config) {
-        for(var key in Object.keys(this.drawing_config)) {
-            if(this.drawing_config[key] != new_config[key])
+        const keys = Object.keys(this.drawing_config);
+        for(var i=0; i< keys.length; i++) {
+            if(new_config[keys[i]] && this.drawing_config[keys[i]] != new_config[keys[i]])
                 return true
         }
         return false;
-    }
-
-    /**
-     * If any element of arr2 is in arr1
-     * 
-     * @param {Array} arr1 - the array to search through
-     * @param {Array} arr2 - the array that contains elements to look for
-     */
-    includes_any(arr1, arr2) {
-        return arr2.some(k => arr1.includes(k));
     }
 }
 
