@@ -15,14 +15,14 @@ class DNN {
     }
 
     draw({
-        x=0, 
-        y=0, 
-        diameter=60,
-        layer_spacing=120,
-        node_spacing=60,
-        weight_colors=0,
-        weight_thicknesses=0.3,
-        weight_alphas=1}={}) {
+            x=0, 
+            y=0, 
+            diameter=60,
+            layer_spacing=120,
+            node_spacing=60,
+            weight_colors=0,
+            weight_thicknesses=0.3
+        }={}) {
 
         const new_config = {
             x,
@@ -31,19 +31,20 @@ class DNN {
             layer_spacing,
             node_spacing,
             weight_colors,
-            weight_thicknesses,
-            weight_alphas
+            weight_thicknesses
         }
 
         if(!arguments[0])
             throw new Error("Please provide a drawing configuration object.")
 
         if(this.__num_draws==0) {
-            this.drawing_config = new_config;
-            this.compile();
+            this.__update_drawing_config(new_config);
+            this.compile(Object.keys(new_config));
         }
         else if(this.__has_changed(new_config)) {
+            let compile_keys = this.__get_updated_configurations(arguments[0]);
             this.__update_drawing_config(new_config);
+            this.compile(compile_keys);
         }
 
         this._draw_edges();
@@ -53,11 +54,15 @@ class DNN {
         this.__num_draws++;
     }
 
-    compile() {
-        this.__compile_node_coordinates();
-        this.__compile_edge_coordinates();
-        this.__compile_edge_colors();
-        this.__compile_edge_thicknesses();
+    compile(compile_keys) {
+        if(utility.includes_any(compile_keys, ["x", "y", "layer_spacing", "node_spacing"])) {
+            this.__compile_node_coordinates();
+            this.__compile_edge_coordinates();
+        }
+        if(compile_keys.includes("weight_colors"))
+            this.__compile_edge_colors();
+        if(compile_keys.includes("weight_thicknesses"))
+            this.__compile_edge_thicknesses();
     }
 
     __update_drawing_config(updated_config) {
@@ -65,10 +70,6 @@ class DNN {
             ...this.drawing_config,
             ...updated_config
         }
-        this.__compile_node_coordinates();
-        this.__compile_edge_coordinates();
-        this.__compile_edge_colors();
-        this.__compile_edge_thicknesses();
     }
 
     add_layer(size, color, name, annotations) {
@@ -149,12 +150,10 @@ class DNN {
     }
 
     __compile_edge_thicknesses() {
-        const { weight_thicknesses } = this.drawing_config;
-        
+        const { weight_thicknesses } = this.drawing_config;   
         const EDGE_THICKNESS_IDX = 5;
         for(var i=0; i < this.state.edges.length; i++) {
             let thickness = weight_thicknesses[i] || weight_thicknesses;
-            
             if(this.state.edges[i][EDGE_THICKNESS_IDX])
                 this.state.edges[i][EDGE_THICKNESS_IDX] = thickness;
             else
@@ -201,6 +200,22 @@ class DNN {
 
     }
 
+    
+    __has_changed(new_config) {
+        var is_equal = _.isEqual(this.drawing_config, new_config);
+        return !is_equal;
+    }
+
+    __get_updated_configurations(new_config) {
+        // return the keys that are different from the configuration object
+        var compile_keys = [];
+        const keys = Object.keys(new_config);
+        for(var i=0; i < keys.length; i++)
+            if(!_.isEqual(new_config[keys[i]], this.drawing_config[keys[i]]))
+                compile_keys.push(keys[i]);
+        return compile_keys;
+    }
+    
     get num_edges() {
         var edges = 0;
         for(var i=0; i < this.state.layer_configs.length-1; i++) {
@@ -210,12 +225,6 @@ class DNN {
         }
         return edges;
     }
-    
-    __has_changed(new_config) {
-        var is_equal = _.isEqual(this.drawing_config, new_config);
-        return !is_equal;
-    }
-
 }
 
 class DNNLayer {

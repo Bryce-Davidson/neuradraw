@@ -27,7 +27,7 @@ function draw() {
     clear();
     
     nn.draw({
-        node_spacing: 60 + frameCount*20,
+        node_spacing: 60,
         weight_thicknesses: 1*frameCount*3
     });
 
