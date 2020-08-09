@@ -23,11 +23,11 @@ class DNN {
         if(utility.includes_any(updated_configurations, ["x", "y", "layer_spacing", "node_spacing"])) {
             this.__compile_node_coordinates();
             this.__compile_edge_coordinates();
+            this.__compile_edge_colors();
+            this.__compile_edge_thicknesses();
         }
-        if(updated_configurations.includes("weight_colors"))
-        this.__compile_edge_colors();
-        if(updated_configurations.includes("weight_thicknesses"))
-        this.__compile_edge_thicknesses();
+        // if(updated_configurations.includes("weight_colors"))
+        // if(updated_configurations.includes("weight_thicknesses"))
         console.log("before:", this.drawing_config)
         this.drawing_config = {
             ...this.drawing_config,
