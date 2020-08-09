@@ -6,83 +6,76 @@ class DNN {
      */
     constructor(name) {
         this.name = name;
+        this.drawing_config = {};
         this.state = {};
+        this.__num_draws = 0;
+
         this.state.layer_configs = []
-    }
-
-    compile() {
-        this.__compile_node_coordinates();
-        this.__compile_edge_coordinates();
-
-        this.__compile_edge_colors();
-        this.__compile_edge_thicknesses();
-    }
-
-    update_drawing_config(updated_config) {
-        var updated_configurations = this.get_updated_configurations(updated_config);
-        if(utility.includes_any(updated_configurations, ["x", "y", "layer_spacing", "node_spacing"])) {
-            this.__compile_node_coordinates();
-            this.__compile_edge_coordinates();
-            this.__compile_edge_colors();
-            this.__compile_edge_thicknesses();
-        }
-        // if(updated_configurations.includes("weight_colors"))
-        // if(updated_configurations.includes("weight_thicknesses"))
-        console.log("before:", this.drawing_config)
-        this.drawing_config = {
-            ...this.drawing_config,
-            ...updated_config
-        }
-        console.log("after", this.drawing_config)
+        this.state.edges = [];
     }
 
     draw({
         x=0, 
         y=0, 
         diameter=60,
-        layer_spacing=200,
+        layer_spacing=120,
         node_spacing=60,
         weight_colors=0,
         weight_thicknesses=0.3,
         weight_alphas=1}={}) {
 
+        const new_config = {
+            x,
+            y,
+            diameter,
+            layer_spacing,
+            node_spacing,
+            weight_colors,
+            weight_thicknesses,
+            weight_alphas
+        }
+
         if(!arguments[0])
             throw new Error("Please provide a drawing configuration object.")
 
-        if(!this.drawing_config) {
-            this.drawing_config = {x,y,diameter,layer_spacing,node_spacing,weight_colors,weight_thicknesses,weight_alphas};
+        if(this.__num_draws==0) {
+            this.drawing_config = new_config;
             this.compile();
         }
-
-        if(this.has_updates(arguments[0]))
-            this.update_drawing_config(arguments[0]);
+        else if(this.__has_changed(new_config)) {
+            this.__update_drawing_config(new_config);
+        }
 
         this._draw_edges();
         this._draw_nodes() ;
         this._draw_annotations();
+
+        this.__num_draws++;
     }
 
-    /**
-    * Adds a layer to the fully connected deep neural network
-    * 
-    * @param{Number} size - the size of the layer
-    * @param{String} color - the color of the layer 
-    * @param{String} name - the name of the layer
-    * @param{Object} annotations - the annotations to be added [see README.md for options and examples]
-    * @example
-    *   nn.add_layer(3, "white", "output", {
-    *       layer: {
-    *           dotted: true,
-    *           above: {
-    *               dimensions: [20, 30], // [width,height]
-    *               type: "latex",
-    *               text: "\\int{x^2}dx=\\frac{x^3}{3}"
-    *           }
-    *       }
-    *   })
-    * @returns nothing
-    */
-   add_layer(size, color, name, annotations) {
+    compile() {
+        this.__compile_node_coordinates();
+        this.__compile_edge_coordinates();
+        this.__compile_edge_colors();
+        this.__compile_edge_thicknesses();
+    }
+
+    __update_drawing_config(updated_config) {
+        this.drawing_config = {
+            ...this.drawing_config,
+            ...updated_config
+        }
+        this.__compile_node_coordinates();
+        this.__compile_edge_coordinates();
+        this.__compile_edge_colors();
+        this.__compile_edge_thicknesses();
+    }
+
+    add_layer(size, color, name, annotations) {
+        for(var i in this.state.layer_configs)
+            if(this.state.layer_configs[i].name == name)
+                throw new Error(`"${name}" is already a layer in the network`)
+
         let new_layer = new DNNLayer(size, color, name, annotations);
         this.state.layer_configs.push(new_layer);
     }
@@ -113,10 +106,8 @@ class DNN {
         }
     }
 
-    // I need a non invasive compilation here
     __compile_edge_coordinates() {
-        this.state.edges = []
-        // this is why we are reseting the edges each time we compile
+        var cur_edge_idx = 0;
         for(var i=0; i < this.state.layer_configs.length - 1; i++) {
             var cur_layer = this.state.layer_configs[i];
             var next_layer = this.state.layer_configs[i+1];
@@ -124,11 +115,20 @@ class DNN {
                 var cur_node = this.state[cur_layer.name].node_coords[j];
                 for(var k=0; k < next_layer.size; k++) {
                     var next_node = this.state[next_layer.name].node_coords[k];
-                    this.state.edges.push([
+                    
+                    var edge_coords = [
                         cur_node[0]+this.drawing_config.diameter/2, 
                         cur_node[1], 
                         next_node[0]-this.drawing_config.diameter/2, 
-                        next_node[1]])
+                        next_node[1],
+                    ]
+
+                    if(this.state.edges[cur_edge_idx]) {
+                        for(var p=0; p < edge_coords.length; p++)
+                            this.state.edges[cur_edge_idx][p] = edge_coords[p];
+                    } else
+                        this.state.edges.push(edge_coords);
+                    cur_edge_idx++;
                 }
             }
         }
@@ -136,18 +136,29 @@ class DNN {
 
     __compile_edge_colors() {
         const { weight_colors } = this.drawing_config;
+        const EDGE_COLOR_IDX = 4;
+        
         for(var i=0; i < this.state.edges.length; i++) {
             let color = weight_colors[i] || weight_colors || "black";
-            this.state.edges[i].push(color)
+            
+            if(this.state.edges[i][EDGE_COLOR_IDX])
+                this.state.edges[i][EDGE_COLOR_IDX] = color;
+            else
+                this.state.edges[i].push(color)
         }
     }
 
     __compile_edge_thicknesses() {
         const { weight_thicknesses } = this.drawing_config;
+        
+        const EDGE_THICKNESS_IDX = 5;
         for(var i=0; i < this.state.edges.length; i++) {
-            const DEFAULT_EDGE_THICKNESS = 1.2;
-            let color = weight_thicknesses[i] || weight_thicknesses || DEFAULT_EDGE_THICKNESS;
-            this.state.edges[i].push(color)
+            let thickness = weight_thicknesses[i] || weight_thicknesses;
+            
+            if(this.state.edges[i][EDGE_THICKNESS_IDX])
+                this.state.edges[i][EDGE_THICKNESS_IDX] = thickness;
+            else
+                this.state.edges[i].push(thickness)
         }
     }
 
@@ -156,12 +167,19 @@ class DNN {
     }
 
     _draw_edges() {
+        const X_1_IDX = 0;
+        const Y_1_IDX = 1;
+        const X_2_IDX = 2;
+        const Y_2_IDX = 3;
+        const COLOR_IDK = 4;
+        const EDGE_THICKNESS_IDX = 5;
+
         for(var i=0; i < this.state.edges.length; i++) {
             let e = this.state.edges[i];
             push();
-            stroke(e[4]);
-            strokeWeight(e[5]);
-            line(e[0], e[1], e[2], e[3])
+            stroke(e[COLOR_IDK]);
+            strokeWeight(e[EDGE_THICKNESS_IDX]);
+            line(e[X_1_IDX], e[Y_1_IDX], e[X_2_IDX], e[Y_2_IDX])
             pop();
         }
     }
@@ -192,28 +210,12 @@ class DNN {
         }
         return edges;
     }
-
-    // the update checker isn't complex enough because it isn't doing a deep comparison
-    // for the array paramaters
-
-    get_updated_configurations(updated_config) {
-        var updated_config_paramaters = [];
-        const keys = Object.keys(this.drawing_config);
-        for(var i=0; i< keys.length; i++) {
-            if(updated_config[keys[i]] && this.drawing_config[keys[i]] != updated_config[keys[i]])
-                updated_config_paramaters.push(keys[i]);
-        }
-        return updated_config_paramaters;
+    
+    __has_changed(new_config) {
+        var is_equal = _.isEqual(this.drawing_config, new_config);
+        return !is_equal;
     }
 
-    has_updates(new_config) {
-        const keys = Object.keys(this.drawing_config);
-        for(var i=0; i< keys.length; i++) {
-            if(new_config[keys[i]] && this.drawing_config[keys[i]] != new_config[keys[i]])
-                return true
-        }
-        return false;
-    }
 }
 
 class DNNLayer {

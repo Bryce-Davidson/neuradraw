@@ -9,15 +9,11 @@ input_annotations = {
     }
 }
 
-nn.add_layer(5, "green", "input", input_annotations)
-nn.add_layer(6, "purple", "h_1", input_annotations)
-nn.add_layer(10, "purple", "h_2", input_annotations)
-nn.add_layer(15, "purple", "h_3", input_annotations)
-nn.add_layer(4, "red", "h_4", input_annotations)
+nn.add_layer(1, "green", "input", input_annotations)
+nn.add_layer(2, "blue", "h_1", input_annotations)
 
 
 console.log(nn);
-console.log(nn.num_edges);
 
 
 function setup() {
@@ -31,7 +27,10 @@ function draw() {
     clear();
     
     nn.draw({
-        layer_spacing: 200,
-        node_spacing: 60,
-    })
+        node_spacing: 60 + frameCount*20,
+        weight_thicknesses: 1*frameCount*3
+    });
+
+    if(frameCount==2)
+        noLoop();
 }
