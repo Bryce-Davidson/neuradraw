@@ -190,6 +190,7 @@ class DNN {
                 var cur_node = this.state[cur_layer.name].node_coords[j];
                 push()
                 fill(cur_layer.color)
+                stroke(cur_layer.color)
                 circle(cur_node[0], cur_node[1], this.drawing_config.diameter);
                 pop();
             }
