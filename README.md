@@ -1,3 +1,7 @@
+# Dead
+    Decided to switch everything to nodejs because getting a file write out for the SVG animations on the front-end needed a server anyway. Currently seeing if I can transfer everything  I need to nodejs
+
+
 Layer annotations options
 ```javascript
 var annotation = {
