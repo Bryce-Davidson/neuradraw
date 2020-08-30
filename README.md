@@ -1,5 +1,5 @@
 # Dead
-    Decided to switch everything to nodejs because getting a file write out for the SVG animations on the front-end needed a server anyway. Currently seeing if I can transfer everything  I need to nodejs
+    Decided that p5.js wasn't enough out of the box functionality for my use case. I will build my own version of p5.js and incorperate webpack.
 
 
 Layer annotations options
