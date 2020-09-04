@@ -1,3 +1,7 @@
+# Dead
+    Decided that p5.js wasn't enough out of the box functionality for my use case. I will build my own version of p5.js and incorperate webpack.
+
+
 Layer annotations options
 ```javascript
 var annotation = {
