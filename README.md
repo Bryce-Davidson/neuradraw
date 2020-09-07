@@ -26,6 +26,8 @@ You will need some basic knoledge of the `p5.js` drawing paradigm and can find t
 
 ## Example
 
+![DNN](./DNN.png)
+
 !! You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands below to work.
 
 To show the drawing, run: `npx http-server ./` and open a browser to `localhost:8080`.
