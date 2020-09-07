@@ -56,17 +56,31 @@ function draw() {
         weight_thicknesses: 1
     });
 }
-
 ```
+# Viewing the sketch
+
+Open the `index.html` file from a file browser.
+
+*Or* 
+
+
+You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
+
+To show the drawing, run: `npx http-server ./` and open a browser to `localhost:8080`.
+
+*Or*
+
+`open http://localhost:8080 &&  npx http-server ./`.
+
 
 # DNN Options
 
 From `DNN.js`
 
 ```javascript
-var nn = new DNN("name_of_dnn")
+// ----- Inside sketch.js -----
 
-// Inside sketch.js
+var nn = new DNN("name_of_dnn")
 
 function setup() {
     createCanvas(2000, 2000);
@@ -76,6 +90,7 @@ function setup() {
 
 function draw() {
     clear();
+    // DNN Options
     nn.draw({
         x,
         y,
@@ -103,18 +118,3 @@ the layers.
 { *[ String|Number ] | String* } ~ **weight_colors** - The spacing between each node in the layers.
 
 { *[Number] | Number* } ~ **weight_thicknesses** - The spacing between each node in the layers.
-
-# Viewing the sketch
-
-Open the `index.html` file from a file browser.
-
-Or 
-
-
-You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
-
-To show the drawing, run: `npx http-server ./` and open a browser to `localhost:8080`.
-
-Or  
-
-`open http://localhost:8080 &&  npx http-server ./`.
