@@ -16,7 +16,7 @@ Decided that p5.js wasn't enough out of the box functionality for the project's 
 
 # Installation
 
-To install Neuradraw and begin using run:
+To install and begin using Neuradraw run:
 `git clone https://github.com/Bryce-Davidson/neuradraw`
 
 You will need some basic knoledge of the `p5.js` drawing paradigm and can find that info here.
