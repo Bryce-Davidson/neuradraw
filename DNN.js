@@ -72,12 +72,18 @@ class DNN {
         }
     }
 
-    add_layer(size, color, name, annotations) {
+    /**
+     * 
+     * @param {Number} size - The number of nodes in the layer.
+     * @param {String} color - The color of the layer in english || hex || RGB.
+     * @param {String} name - The name of the neural newtork layer.
+     */
+    add_layer(size, color, name) {
         for(var i in this.state.layer_configs)
             if(this.state.layer_configs[i].name == name)
                 throw new Error(`"${name}" is already a layer in the network`)
 
-        let new_layer = new DNNLayer(size, color, name, annotations);
+        let new_layer = new DNNLayer(size, color, name);
         this.state.layer_configs.push(new_layer);
     }
 
