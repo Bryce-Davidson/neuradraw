@@ -61,7 +61,7 @@ function draw() {
 
 Open the `index.html` file from a file browser.
 
-*Or* 
+*Or*
 
 
 You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
@@ -102,6 +102,10 @@ the layers.
 // ----- Inside sketch.js -----
 
 var nn = new DNN("name_of_dnn")
+
+nn.add_layer(2, "green", "input")
+nn.add_layer(3, "blue", "h_1")
+nn.add_layer(3, "red", "output")
 
 function setup() {
     createCanvas(2000, 2000);
