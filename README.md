@@ -14,6 +14,11 @@ The reasons for moving on to developing on a different code base and paradigm ar
 
 Decided that p5.js wasn't enough out of the box functionality for the project's use case. Have decided to build my version of p5.js and incorporate webpack to allow access to npm in the neuradraw-2 repository. This project in continued there.
 
+## Installation
+
+To install Neuradraw and begin using run:
+`git clone https://github.com/Bryce-Davidson/neuradraw`
+
 ## Examples
 
 To show the drawing run `npx http-server ./` and open a browser to `localhost:8080`.
