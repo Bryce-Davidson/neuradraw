@@ -28,7 +28,7 @@ You will need some basic knoledge of the `p5.js` drawing paradigm and can find t
 
 ![DNN](./DNN.png)
 
-!! You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands below to work.
+!! You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
 
 To show the drawing, run: `npx http-server ./` and open a browser to `localhost:8080`.
 
