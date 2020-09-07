@@ -94,6 +94,10 @@ the layers.
 { *[Number] | Number* } ~ **weight_thicknesses** - The spacing between each node in the layers.
 
 
+---
+
+### Example
+
 ```javascript
 // ----- Inside sketch.js -----
 
@@ -109,13 +113,13 @@ function draw() {
     clear();
     // DNN Options
     nn.draw({
-        x,
-        y,
-        diameter,
-        layer_spacing,
-        node_spacing,
-        weight_colors,
-        weight_thicknesses
+        x:20,
+        y:0,
+        diameter:65,
+        layer_spacing:120,
+        node_spacing: 120,
+        weight_colors: 0 || 'black',
+        weight_thicknesses: 1.3
     });
 }
 
