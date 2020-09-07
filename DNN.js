@@ -229,17 +229,9 @@ class DNN {
 }
 
 class DNNLayer {
-    constructor(size, color, name, annotations) {
+    constructor(size, color, name) {
         this.size = size;
         this.name = name;
         this.color = color;
-        this.annotations = annotations || {};
-    }
-
-    /**
-    * @param {Object} annotations - the annotations to be provided to the layer
-    */
-    add_annotations(annotations) {
-        this.annotations = annotations;
     }
 }
