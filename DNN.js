@@ -14,6 +14,17 @@ class DNN {
         this.state.edges = [];
     }
 
+    /**
+     * 
+     * @param {Object} param0 - The drawing configuration of the DNN
+     * @param {Number} param0.x - The x position of the DNN.
+     * @param {Number} param0.y - The y position of the DNN.
+     * @param {Number} param0.diameter - The diameter of the nodes of the DNN.
+     * @param {Number} param0.layer_spacing - The spacing between each layer.
+     * @param {Number} param0.node_spacing - The spacing between each node in the layers.
+     * @param {[String|Number] | String} param0.weight_colors - The spacing between each node in the layers.
+     * @param {[Number] | Number} param0.weight_thicknesses - The spacing between each node in the layers.
+     */
     draw({
             x=0, 
             y=0, 

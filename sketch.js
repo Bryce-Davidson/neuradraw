@@ -9,7 +9,6 @@ nn.add_layer(3, "red", "output")
 
 function setup() {
     createCanvas(2000, 2000);
-    circle(100,100,100)
     frameRate(30);
     noLoop();
 }

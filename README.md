@@ -16,7 +16,7 @@ Decided that p5.js wasn't enough out of the box functionality for the project's 
 
 # Installation
 
-To install and begin using Neuradraw run:
+To install Neuradraw run:
 `git clone https://github.com/Bryce-Davidson/neuradraw`
 
 You will need some basic knoledge of the `p5.js` drawing paradigm and can find that info here.
@@ -30,7 +30,7 @@ You will need some basic knoledge of the `p5.js` drawing paradigm and can find t
 
 --- 
 
-You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
+You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
 
 To show the drawing, run: `npx http-server ./` and open a browser to `localhost:8080`.
 
@@ -56,7 +56,6 @@ nn.add_layer(3, "red", "output")
 
 function setup() {
     createCanvas(2000, 2000);
-    circle(100,100,100)
     frameRate(30);
     noLoop();
 }
@@ -71,5 +70,11 @@ function draw() {
         weight_thicknesses: 1
     });
 }
+
+```
+
+# DNN Options
+
+```javascript
 
 ```
