@@ -98,8 +98,9 @@ the layers.
 
 ### Example
 
+Inside `sketch.js`
+
 ```javascript
-// ----- Inside sketch.js -----
 
 var nn = new DNN("name_of_dnn")
 
