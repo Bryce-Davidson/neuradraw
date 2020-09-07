@@ -63,6 +63,32 @@ function draw() {
 
 From `DNN.js`
 
+```javascript
+var nn = new DNN("name_of_dnn")
+
+// Inside sketch.js
+
+function setup() {
+    createCanvas(2000, 2000);
+    frameRate(30);
+    noLoop();
+}
+
+function draw() {
+    clear();
+    nn.draw({
+        x,
+        y,
+        diameter,
+        layer_spacing,
+        node_spacing,
+        weight_colors,
+        weight_thicknesses
+    });
+}
+
+```
+
 { *Number* } ~ **x** - The x position of the DNN.
 
 { *Number* } ~ **y** - The y position of the DNN.
@@ -74,11 +100,16 @@ From `DNN.js`
 { *Number* } ~ **node_spacing** - The spacing between each node in 
 the layers.
 
-{ *[String|Number] | String* } ~ **weight_colors** - The spacing between each node in the layers.
+{ *[ String|Number ] | String* } ~ **weight_colors** - The spacing between each node in the layers.
 
 { *[Number] | Number* } ~ **weight_thicknesses** - The spacing between each node in the layers.
 
 # Viewing the sketch
+
+Open the `index.html` file from a file browser.
+
+Or 
+
 
 You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
 
@@ -87,7 +118,3 @@ To show the drawing, run: `npx http-server ./` and open a browser to `localhost:
 Or  
 
 `open http://localhost:8080 &&  npx http-server ./`.
-
-Or
-
-Open the `index.html` file from a file browser.
