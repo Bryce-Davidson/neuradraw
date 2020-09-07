@@ -73,9 +73,26 @@ To show the drawing, run: `npx http-server ./` and open a browser to `localhost:
 `open http://localhost:8080 &&  npx http-server ./`.
 
 
-# DNN Options
+# DNN Drawing Options
 
 From `DNN.js`
+
+
+{ *Number* } ~ **x** - The x position of the DNN.
+
+{ *Number* } ~ **y** - The y position of the DNN.
+
+{ *Number* } ~ **diameter** - The diameter of the nodes of the DNN.
+
+{ *Number* } ~ **layer_spacing** - The spacing between each layer.
+
+{ *Number* } ~ **node_spacing** - The spacing between each node in 
+the layers.
+
+{ *[ String|Number ] | String | Number* } ~ **weight_colors** - The spacing between each node in the layers.
+
+{ *[Number] | Number* } ~ **weight_thicknesses** - The spacing between each node in the layers.
+
 
 ```javascript
 // ----- Inside sketch.js -----
@@ -103,18 +120,3 @@ function draw() {
 }
 
 ```
-
-{ *Number* } ~ **x** - The x position of the DNN.
-
-{ *Number* } ~ **y** - The y position of the DNN.
-
-{ *Number* } ~ **diameter** - The diameter of the nodes of the DNN.
-
-{ *Number* } ~ **layer_spacing** - The spacing between each layer.
-
-{ *Number* } ~ **node_spacing** - The spacing between each node in 
-the layers.
-
-{ *[ String|Number ] | String* } ~ **weight_colors** - The spacing between each node in the layers.
-
-{ *[Number] | Number* } ~ **weight_thicknesses** - The spacing between each node in the layers.
