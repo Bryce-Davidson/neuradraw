@@ -64,7 +64,7 @@ Open the `index.html` file from a file browser.
 *Or*
 
 
-You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work. Or you can simply open the `index.html` file after creating your DNN in `sketch.js`
+You will need [Nodejs](https://nodejs.org/en/) Installed on your machine for the `npx` commands listed below to work.
 
 To show the drawing, run: `npx http-server ./` and open a browser to `localhost:8080`.
 
