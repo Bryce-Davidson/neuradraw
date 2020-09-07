@@ -21,7 +21,7 @@ To install Neuradraw run:
 
 You will need some basic knoledge of the `p5.js` drawing paradigm and can find that info here.
 
-<a href="https://www.youtube.com/watch?v=D1ELEeIs0j8" target="_blank">Basics of p5.js Drawing</a>
+<a href="https://www.youtube.com/watch?v=D1ELEeIs0j8" rel="noopener" target="_blank">Basics of p5.js Drawing</a>
 
 ## Example
 
